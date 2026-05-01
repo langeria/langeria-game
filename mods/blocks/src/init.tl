@@ -149,7 +149,7 @@ core.register_node('langeria_blocks:river_water', {
 
 core.register_node('langeria_blocks:grass', {
   description = 'Grass',
-  tiles = { 'grass.png' },
+  tiles = { 'sand.png' },
   groups = { dig_immediate = 3 },
   paramtype = "light",
 })
@@ -258,43 +258,6 @@ core.register_biome({
 	y_min = -100,
 	heat_point = 10,
 	humidity_point = 10,
-})
-
-core.register_decoration({
-	name = "flower",
-	deco_type = "simple",
-	place_on = {"langeria_blocks:grass"},
-	sidelen = 16,
-	fill_ratio = 0.005,
-	y_max = 31000,
-	y_min = 0,
-	decoration = { "langeria_blocks:langeria_blocks_flower"},
-})
-
-core.register_decoration({
-	name = "long_plant",
-	deco_type = "simple",
-	place_on = {"langeria_blocks:grass"},
-	sidelen = 16,
-	fill_ratio = 0.005,
-	y_max = 31000,
-	y_min = 0,
-	decoration = { "langeria_blocks:long_plant"},
-})
-
-core.register_decoration({
-	name = "tree",
-	deco_type = "schematic",
-	place_on = {"langeria_blocks:grass"},
-	place_offset_y = 1,
-	sidelen = 16,
-	fill_ratio = 0.001,
-	biomes = "normalland",
-	y_max = 31000,
-	y_min = 0,
-	schematic = core.get_modpath("langeria_blocks") .. "/schematics/tree.mts",
-	flags = "place_center_x, place_center_z",
-	rotation = "random",
 })
 
 core.register_ore({
