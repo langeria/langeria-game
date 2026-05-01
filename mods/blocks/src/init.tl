@@ -1,45 +1,118 @@
-global record Engine
-  register_item: function(string, ItemDef)
-end
 
 local record Vec3
-  x: number
-  y: number
-  z: number
+	x: number
+	y: number
+	z: number
 end
 
 local record DamageGroups
-  fleshy: number
+	fleshy: number
 end
 
 local record ToolCapabilities
-  full_punch_interval: number
-  max_drop_level: number
-  damage_groups: DamageGroups
+	full_punch_interval: number
+	max_drop_level: number
+	damage_groups: DamageGroups
 end
 
 local record ItemDef
-  type: string
-  wield_image: string
-  wield_scale: Vec3
-  range: number
-  tool_capabilities: ToolCapabilities
+	type: string
+	wield_image: string
+	wield_scale: Vec3
+	range: number
+	tool_capabilities: ToolCapabilities
 end
 
-local core: Engine
+local record Player
+	get_player_name: function(self: Player): string
+	set_lighting: function(self: Player, settings: table)
+end
 
---0--ONJOINPLAYER
+local record NodeDef
+	description: string
+	tiles: {string}
+	groups: table
+	paramtype: string
+	light_source: number
+	drawtype: string
+	waving: number
+	visual_scale: number
+	inventory_image: string
+	wield_image: string
+	sunlight_propagates: boolean
+	walkable: boolean
+end
 
-core.register_on_joinplayer(function(player, last_login)
+local record BiomeDef
+	name: string
+	node_top: string
+	depth_top: number
+	node_filler: string
+	depth_filler: number
+	node_riverbed: string
+	node_stone: string
+	node_water: string
+	depth_riverbed: number
+	y_max: number
+	y_min: number
+	heat_point: number
+	humidity_point: number
+end
+
+local record DecorationDef
+	name: string
+	deco_type: string
+	place_on: {string}
+	sidelen: number
+	fill_ratio: number
+	y_max: number
+	y_min: number
+	decoration: {string}
+	place_offset_y: number
+	biomes: string
+	schematic: string
+	flags: string
+	rotation: string
+end
+
+local record OreDef
+	ore_type: string
+	ore: string
+	wherein: string
+	clust_scarcity: number
+	clust_num_ores: number
+	clust_size: number
+	y_max: number
+	y_min: number
+end
+
+local record Engine
+	register_item: function(string, ItemDef)
+	register_on_joinplayer: function(function(Player, number))
+	chat_send_player: function(string, string)
+	register_node: function(string, NodeDef)
+	register_alias: function(string, string)
+	register_biome: function(BiomeDef)
+	register_decoration: function(DecorationDef)
+	register_ore: function(OreDef)
+	get_modpath: function(string): string
+	get_mod_storage: function(): table
+	register_chatcommand: function(string, table)
+	register_on_chat_message: function(function(string, string): boolean): boolean
+	chat_send_all: function(string)
+	colorize: function(string, string): string
+end
+
+global core: Engine
+
+core.register_on_joinplayer(function(player: Player, _: number)
 	player:set_lighting({ 
 		shadows = { intensity = 0.5 } 
 	})
 
-	local playername = player:get_player_name()
-	core.chat_send_player(playername, "Hi " .. playername .. "!")
+	local player_name = player:get_player_name()
+	core.chat_send_player(player_name, player_name .. " joined the game.")
 end)
-
---1--HAND
 
 core.register_item(':', {
 	type = 'none',
@@ -50,81 +123,79 @@ core.register_item(':', {
 		full_punch_interval = 0.9,
 		max_drop_level = 0,
 		damage_groups = {fleshy = 1},
-	}
+	},
 })
 
---2--NODES
-
-core.register_node('blank:stone', {
-    description = 'Stone',
-    tiles = { 'stone.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:stone', {
+  description = 'Stone',
+  tiles = { 'stone.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:water', {
-    description = 'Water',
-    tiles = { 'water.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:water', {
+  description = 'Water',
+  tiles = { 'water.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:river_water', {
-    description = 'River Water',
-    tiles = { 'river_water.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:river_water', {
+  description = 'River Water',
+  tiles = { 'river_water.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:grass', {
-    description = 'Grass',
-    tiles = { 'grass.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:grass', {
+  description = 'Grass',
+  tiles = { 'grass.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:dirt', {
-    description = 'Dirt',
-    tiles = { 'dirt.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:dirt', {
+  description = 'Dirt',
+  tiles = { 'dirt.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
 -- Minerals
 
-core.register_node('blank:ruby', {
-    description = 'Ruby',
-    tiles = { 'ruby.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:ruby', {
+  description = 'Ruby',
+  tiles = { 'ruby.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:sapphire', {
-    description = 'Sapphire',
-    tiles = { 'sapphire.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:sapphire', {
+  description = 'Sapphire',
+  tiles = { 'sapphire.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:emerald', {
-    description = 'Emerald',
-    tiles = { 'emerald.png' },
-    groups = { dig_immediate = 3 },
-    paramtype = "light",
+core.register_node('langeria_blocks:emerald', {
+  description = 'Emerald',
+  tiles = { 'emerald.png' },
+  groups = { dig_immediate = 3 },
+  paramtype = "light",
 })
 
-core.register_node('blank:mese', {
-    description = 'Mese',
-    tiles = { 'mese.png' },
-    groups = { dig_immediate = 3 },
-    light_source = 14,
-    paramtype = "light",
+core.register_node('langeria_blocks:mese', {
+  description = 'Mese',
+  tiles = { 'mese.png' },
+  groups = { dig_immediate = 3 },
+  light_source = 14,
+  paramtype = "light",
 })
 
 -- Vegetation
 
-core.register_node("blank:flower", {
-	description = "Blank Flower",
+core.register_node("langeria_blocks:flower", {
+	description = "langeria_blocks Flower",
 	drawtype = "plantlike",
 	waving = 1,
 	tiles = { "flower.png"},
@@ -137,7 +208,7 @@ core.register_node("blank:flower", {
 	light_source = 14,
 })
 
-core.register_node("blank:long_plant", {
+core.register_node("langeria_blocks:long_plant", {
 	description = "Long Plant",
 	drawtype = "plantlike",
 	visual_scale = 2,
@@ -151,14 +222,14 @@ core.register_node("blank:long_plant", {
 	groups = { dig_immediate = 3, flower = 1 },
 })
 
-core.register_node('blank:wood', {
+core.register_node('langeria_blocks:wood', {
     description = 'Wood',
     tiles = { 'wood.png' },
     groups = { dig_immediate = 3 },
     paramtype = "light",
 })
 
-core.register_node('blank:leaves', {
+core.register_node('langeria_blocks:leaves', {
     description = 'Leaves',
     tiles = { 'leaves.png' },
     groups = { dig_immediate = 3 },
@@ -167,21 +238,21 @@ core.register_node('blank:leaves', {
 
 -- THESE ALIAS ARE ESSENTIAL FOR LOADING A V7 MAP
 
-core.register_alias('mapgen_stone', 'blank:stone')
-core.register_alias('mapgen_water_source', 'blank:water')
-core.register_alias('mapgen_river_water_source', 'blank:river_water')
+core.register_alias('mapgen_stone', 'langeria_blocks:stone')
+core.register_alias('mapgen_water_source', 'langeria_blocks:water')
+core.register_alias('mapgen_river_water_source', 'langeria_blocks:river_water')
 
 --3--BIOMES
 
 core.register_biome({
 	name = "grassland",
-	node_top = "blank:grass",
+	node_top = "langeria_blocks:grass",
 	depth_top = 1,
-	node_filler = "blank:dirt",
+	node_filler = "langeria_blocks:dirt",
 	depth_filler = 4,
-	node_riverbed = "blank:river_water",
-	node_stone = "blank:stone",
-	node_water = "blank:water",
+	node_riverbed = "langeria_blocks:river_water",
+	node_stone = "langeria_blocks:stone",
+	node_water = "langeria_blocks:water",
 	depth_riverbed = 2,
 	y_max = 31000,
 	y_min = -100,
@@ -189,52 +260,47 @@ core.register_biome({
 	humidity_point = 10,
 })
 
-
---4--DECORATIONS
-
 core.register_decoration({
 	name = "flower",
 	deco_type = "simple",
-	place_on = {"blank:grass"},
+	place_on = {"langeria_blocks:grass"},
 	sidelen = 16,
 	fill_ratio = 0.005,
 	y_max = 31000,
 	y_min = 0,
-	decoration = { "blank:blank_flower"},
+	decoration = { "langeria_blocks:langeria_blocks_flower"},
 })
 
 core.register_decoration({
 	name = "long_plant",
 	deco_type = "simple",
-	place_on = {"blank:grass"},
+	place_on = {"langeria_blocks:grass"},
 	sidelen = 16,
 	fill_ratio = 0.005,
 	y_max = 31000,
 	y_min = 0,
-	decoration = { "blank:long_plant"},
+	decoration = { "langeria_blocks:long_plant"},
 })
 
 core.register_decoration({
 	name = "tree",
 	deco_type = "schematic",
-	place_on = {"blank:grass"},
+	place_on = {"langeria_blocks:grass"},
 	place_offset_y = 1,
 	sidelen = 16,
 	fill_ratio = 0.001,
 	biomes = "normalland",
 	y_max = 31000,
 	y_min = 0,
-	schematic = core.get_modpath("blank") .. "/schematics/tree.mts",
+	schematic = core.get_modpath("langeria_blocks") .. "/schematics/tree.mts",
 	flags = "place_center_x, place_center_z",
 	rotation = "random",
 })
 
---5--ORES
-
 core.register_ore({
 	ore_type = "scatter",
-	ore = "blank:ruby",
-	wherein = "blank:stone",
+	ore = "langeria_blocks:ruby",
+	wherein = "langeria_blocks:stone",
 	clust_scarcity = 8 * 8 * 8,
 	clust_num_ores = 16,
 	clust_size = 16,
@@ -244,8 +310,8 @@ core.register_ore({
 
 core.register_ore({
 	ore_type = "scatter",
-	ore = "blank:sapphire",
-	wherein = "blank:stone",
+	ore = "langeria_blocks:sapphire",
+	wherein = "langeria_blocks:stone",
 	clust_scarcity = 8 * 8 * 8,
 	clust_num_ores = 16,
 	clust_size = 16,
@@ -255,8 +321,8 @@ core.register_ore({
 
 core.register_ore({
 	ore_type = "scatter",
-	ore = "blank:emerald",
-	wherein = "blank:stone",
+	ore = "langeria_blocks:emerald",
+	wherein = "langeria_blocks:stone",
 	clust_scarcity = 8 * 8 * 8,
 	clust_num_ores = 16,
 	clust_size = 16,
@@ -266,8 +332,8 @@ core.register_ore({
 
 core.register_ore({
 	ore_type = "scatter",
-	ore = "blank:mese",
-	wherein = "blank:stone",
+	ore = "langeria_blocks:mese",
+	wherein = "langeria_blocks:stone",
 	clust_scarcity = 8 * 8 * 8,
 	clust_num_ores = 16,
 	clust_size = 16,
@@ -276,34 +342,34 @@ core.register_ore({
 })
 
 
---6--SET COLOR MESSAGE
+-- --6--SET COLOR MESSAGE
 
-local storage = core.get_mod_storage()
+-- local storage = core.get_mod_storage()
 
--- Function to get a player's saved color
-default_color = "#FFFFFF" -- White
-local function get_player_color(player_name)
-    return storage:get_string(player_name) ~= "" and storage:get_string(player_name) or default_color
-end
+-- -- Function to get a player's saved color
+-- default_color = "#FFFFFF" -- White
+-- local function get_player_color(player_name)
+--     return storage:get_string(player_name) ~= "" and storage:get_string(player_name) or default_color
+-- end
 
--- Command to set chat color
-core.register_chatcommand("setcolor", {
-    params = "#RRGGBB",
-    description = "Set your chat color",
-    privs = {},
-    func = function(name, param)
-        if param:match("^#%x%x%x%x%x%x$") then
-            storage:set_string(name, param)
-            return true, "Chat color set to " .. param
-        else
-            return false, "Invalid color format! Use rgb #RRGGBB"
-        end
-    end,
-})
+-- -- Command to set chat color
+-- core.register_chatcommand("setcolor", {
+--     params = "#RRGGBB",
+--     description = "Set your chat color",
+--     privs = {},
+--     func = function(name, param)
+--         if param:match("^#%x%x%x%x%x%x$") then
+--             storage:set_string(name, param)
+--             return true, "Chat color set to " .. param
+--         else
+--             return false, "Invalid color format! Use rgb #RRGGBB"
+--         end
+--     end,
+-- })
 
--- Modify player messages
-core.register_on_chat_message(function(name, message)
-    local color = get_player_color(name)
-    core.chat_send_all(core.colorize(color, "<" .. name .. "> " .. message))
-    return true -- Stops default chat handling
-end)
+-- -- Modify player messages
+-- core.register_on_chat_message(function(name, message)
+--     local color = get_player_color(name)
+--     core.chat_send_all(core.colorize(color, "<" .. name .. "> " .. message))
+--     return true -- Stops default chat handling
+-- end)
