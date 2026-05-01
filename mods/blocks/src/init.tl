@@ -1,43 +1,56 @@
---[[
+global record Engine
+  register_item: function(string, ItemDef)
+end
 
-	INDEX
+local record Vec3
+  x: number
+  y: number
+  z: number
+end
 
-	0--ONJOINPLAYER
-	1--HAND
-	2--NODES	
-	3--BIOMES
-	4--DECORATIONS
-	5--ORES
-	6--COLOR MESSAGES
+local record DamageGroups
+  fleshy: number
+end
 
-	
-]]
+local record ToolCapabilities
+  full_punch_interval: number
+  max_drop_level: number
+  damage_groups: DamageGroups
+end
+
+local record ItemDef
+  type: string
+  wield_image: string
+  wield_scale: Vec3
+  range: number
+  tool_capabilities: ToolCapabilities
+end
+
+local core: Engine
 
 --0--ONJOINPLAYER
 
 core.register_on_joinplayer(function(player, last_login)
+	player:set_lighting({ 
+		shadows = { intensity = 0.5 } 
+	})
 
-    -- Necessary for shadows
-    --player:set_lighting({ shadows = { intensity = 0.5 } })
-
-    local playername = player:get_player_name()
-    core.chat_send_player(playername, "Hi " .. playername .. "!")
-
-
+	local playername = player:get_player_name()
+	core.chat_send_player(playername, "Hi " .. playername .. "!")
 end)
 
 --1--HAND
 
 core.register_item(':', {
-    type = 'none',
-    wield_image = 'hand.png',
-    wield_scale = {x = 1, y = 1, z = 1},
-    range = 20,
-    tool_capabilities = {
-        full_punch_interval = 0.9,
-        max_drop_level = 0,
-        damage_groups = {fleshy = 1},
-    }
+	type = 'none',
+	wield_image = 'hand.png',
+	wield_scale = {x = 1, y = 1, z = 1},
+	range = 20,
+	tool_capabilities = {
+		full_punch_interval = 0.9,
+		max_drop_level = 0,
+		damage_groups = {fleshy = 1},
+	}
 })
 
 --2--NODES
