@@ -30,7 +30,8 @@ end
 
 local record NodeDef
 	description: string
-	tiles: {string}
+	tiles: table
+	special_tiles: table
 	groups: table
 	paramtype: string
 	light_source: number
@@ -41,6 +42,15 @@ local record NodeDef
 	wield_image: string
 	sunlight_propagates: boolean
 	walkable: boolean
+	pointable: boolean
+	diggable: boolean
+	buildable_to: boolean
+	liquidtype: string
+	liquid_alternative_flowing: string
+	liquid_alternative_source: string
+	liquid_viscosity: number
+	liquid_renewable: boolean
+	liquid_range: number
 end
 
 local record BiomeDef
@@ -106,8 +116,10 @@ end
 global core: Engine
 
 core.register_on_joinplayer(function(player: Player, _: number)
-	player:set_lighting({ 
-		shadows = { intensity = 0.5 } 
+	player:set_lighting({
+		shadows = { intensity = 0.5 },
+		bloom = { intensity = 0.05, strength_factor = 1.0, radius = 1.0 },
+		volumetric_light = { strength = 0.2 },
 	})
 
 	local player_name = player:get_player_name()
@@ -130,14 +142,65 @@ core.register_node('langeria_blocks:stone', {
   description = 'Stone',
   tiles = { 'stone.png' },
   groups = { dig_immediate = 3 },
-  paramtype = "light",
 })
 
 core.register_node('langeria_blocks:water', {
   description = 'Water',
-  tiles = { 'water.png' },
-  groups = { dig_immediate = 3 },
+	drawtype = "liquid",
+  tiles = {
+			{
+					name = "water.png",
+					animation = {
+							type = "vertical_frames",
+							aspect_w = 16,
+							aspect_h = 16,
+							length = 2.0,
+					},
+			},
+    },
+	special_tiles = {
+		{
+				name = "water.png",
+				animation = {
+						type = "vertical_frames",
+						aspect_w = 16,
+						aspect_h = 16,
+						length = 2.0,
+				},
+				backface_culling = false,
+		},
+	},
   paramtype = "light",
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	liquidtype = "source",
+	liquid_alternative_flowing = "langeria_blocks:water_flowing",
+	liquid_alternative_source = "langeria_blocks:water",
+	liquid_viscosity = 1,
+	liquid_renewable = true,
+	liquid_range = 8,
+	groups = {water = 3, liquid = 3, puts_out_fire = 1},
+})
+
+core.register_node('langeria_blocks:water_flowing', {
+  description = 'Flowing Water',
+	drawtype = "flowingliquid",
+  tiles = { 'water.png' },
+	special_tiles = { 'water.png', 'water.png' },
+  paramtype = "light",
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	liquidtype = "flowing",
+	liquid_alternative_flowing = "langeria_blocks:water_flowing",
+	liquid_alternative_source = "langeria_blocks:water",
+	liquid_viscosity = 1,
+	liquid_renewable = true,
+	liquid_range = 8,
+	groups = {water = 3, liquid = 3, puts_out_fire = 1},
 })
 
 core.register_node('langeria_blocks:river_water', {
@@ -149,16 +212,21 @@ core.register_node('langeria_blocks:river_water', {
 
 core.register_node('langeria_blocks:grass', {
   description = 'Grass',
-  tiles = { 'sand.png' },
+  tiles = {
+		"grass_top.png",    -- y+
+		"dirt.png",  				-- y-
+		"grass_side.png", 	-- x+
+		"grass_side.png",  	-- x-
+		"grass_side.png",  	-- z+
+		"grass_side.png", 	-- z-
+	},
   groups = { dig_immediate = 3 },
-  paramtype = "light",
 })
 
 core.register_node('langeria_blocks:dirt', {
   description = 'Dirt',
   tiles = { 'dirt.png' },
   groups = { dig_immediate = 3 },
-  paramtype = "light",
 })
 
 -- Minerals
@@ -202,7 +270,6 @@ core.register_node("langeria_blocks:flower", {
 	inventory_image = "flower.png",
 	wield_image = "flower.png",
 	sunlight_propagates = true,
-	paramtype = "light",
 	walkable = false,
 	groups = { dig_immediate = 3, flower = 1 },
 	light_source = 14,
@@ -217,7 +284,6 @@ core.register_node("langeria_blocks:long_plant", {
 	inventory_image = "long_plant.png",
 	wield_image = "long_plant.png",
 	sunlight_propagates = true,
-	paramtype = "light",
 	walkable = false,
 	groups = { dig_immediate = 3, flower = 1 },
 })
@@ -226,14 +292,12 @@ core.register_node('langeria_blocks:wood', {
     description = 'Wood',
     tiles = { 'wood.png' },
     groups = { dig_immediate = 3 },
-    paramtype = "light",
 })
 
 core.register_node('langeria_blocks:leaves', {
     description = 'Leaves',
     tiles = { 'leaves.png' },
     groups = { dig_immediate = 3 },
-    paramtype = "light",
 })
 
 -- THESE ALIAS ARE ESSENTIAL FOR LOADING A V7 MAP
